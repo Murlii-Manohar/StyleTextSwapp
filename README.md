@@ -109,4 +109,4 @@ This application requires an API key for text transformation:
 
 ## Additional Documentation
 
-- [DATABASE.md](DATABASE.md) - Details about the database schema and migration utilities
+- [DATABASE.md](DATABASE.md) - Details about the database schema and migration utility

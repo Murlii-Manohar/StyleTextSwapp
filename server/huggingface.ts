@@ -35,7 +35,7 @@ export async function transformTextStyle({
       : `Transform the following text to ${toStyle} style ${preservationText}. Keep the original meaning intact. The text is: "${originalText}"`;
 
     // Using Hugging Face's Inference API with a suitable model like Mixtral or Mistral
-    const response = await fetch('https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1', {
+    const response = await fetch('https://router.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -117,15 +117,15 @@ export async function validateApiKey(): Promise<boolean> {
 
     console.log("Testing Hugging Face API key:", apiKey.substring(0, 5) + "..." + apiKey.substring(apiKey.length - 3));
     
-    // Try with a smaller model that might require less permissions
-    const response = await fetch('https://api-inference.huggingface.co/models/google/flan-t5-small', {
+    // Try with the same model we use for transformations
+    const response = await fetch('https://router.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        inputs: "Hello, this is a test.",
+        inputs: "Hello",
         parameters: {
           max_new_tokens: 5
         }

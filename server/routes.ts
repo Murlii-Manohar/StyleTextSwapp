@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { transformTextStyle, validateApiKey } from "./huggingface";
+import { transformTextStyle, validateApiKey } from "./gemini";
 import { z } from "zod";
 
 // Add guestId to session type
@@ -19,10 +19,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Check if API key is valid at startup
   try {
     const isApiKeyValid = await validateApiKey();
-    if (isApiKeyValid) {
-      console.log("Hugging Face API key is valid. Using Hugging Face for style transformations.");
-    } else {
-      console.warn("Hugging Face API key is invalid or not set. Style transformations will not work.");
+    if (!isApiKeyValid) {
+      console.warn("Gemini API key is invalid or not set. Style transformations will not work.");
     }
   } catch (error) {
     console.error("Error validating API key:", error);
@@ -80,7 +78,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.incrementGuestUsage(guestId);
       }
       
-      // Use Hugging Face for text transformation
+      // Use Gemini for text transformation
       let transformedText: string;
       try {
         transformedText = await transformTextStyle({
@@ -90,7 +88,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           preservationPercentage,
         });
       } catch (error: any) {
-        console.error("Hugging Face API error:", error);
+        console.error("Gemini API error:", error);
         return res.status(500).json({
           message: "Error transforming text. Please try again later.",
           error: error.message || String(error)
